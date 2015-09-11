@@ -1,0 +1,77 @@
+﻿<Window x:Class="Sampler.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:tb="http://www.hardcodet.net/taskbar"
+        x:Name="window"
+        Title="Sampler v0.3" Height="200" Width="270"
+        ShowInTaskbar="False"
+        Icon="pack://application:,,,/Sampler;component/Resources/icone.png">
+    <Window.Resources>
+        <Style x:Key="LeftColumnStyle">
+            <Setter Property="FrameworkElement.VerticalAlignment" Value="Center" />
+            <Setter Property="FrameworkElement.HorizontalAlignment" Value="Right" />
+            <Setter Property="Grid.Column" Value="0" />
+        </Style>
+        <Style x:Key="RightColumnStyle">
+            <Setter Property="FrameworkElement.VerticalAlignment" Value="Center" />
+            <Setter Property="FrameworkElement.HorizontalAlignment" Value="Left" />
+            <Setter Property="Grid.Column" Value="2" />
+        </Style>
+    </Window.Resources>
+    <Grid ShowGridLines="False">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="10" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <tb:TaskbarIcon IconSource="pack://application:,,,/Sampler;component/Resources/icone.ico"
+                        ToolTipText="Sampler"
+                        LeftClickCommand="{Binding TaskbarClickCommand, ElementName=window}"
+                        />
+
+        <Label Style="{StaticResource LeftColumnStyle}" Grid.Row="0" Content="USB open : "></Label>
+        <Rectangle Grid.Row="0" Width="10" Height="10" Stroke="Black" StrokeThickness="1">
+            <Rectangle.Style>
+                <Style TargetType="Rectangle" BasedOn="{StaticResource RightColumnStyle}">
+                    <Setter Property="Margin" Value="5 0 0 0"></Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding UsbListener.IsOpen, ElementName=window}" Value="True">
+                            <Setter Property="Fill" Value="Green"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding UsbListener.IsOpen, ElementName=window}" Value="False">
+                            <Setter Property="Fill" Value="DarkRed"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Rectangle.Style>
+        </Rectangle>
+        <Label Style="{StaticResource LeftColumnStyle}" Grid.Row="1" Content="USB data received : "></Label>
+        <Rectangle Grid.Row="1" Width="10" Height="10" Stroke="Black" StrokeThickness="1">
+            <Rectangle.Style>
+                <Style TargetType="Rectangle" BasedOn="{StaticResource RightColumnStyle}">
+                    <Setter Property="Margin" Value="5 0 0 0"></Setter>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding UsbListener.CommunicationOk, ElementName=window}" Value="True">
+                            <Setter Property="Fill" Value="Green"></Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding UsbListener.CommunicationOk, ElementName=window}" Value="False">
+                            <Setter Property="Fill" Value="DarkRed"></Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Rectangle.Style>
+        </Rectangle>
+        <Label Style="{StaticResource LeftColumnStyle}" Grid.Row="2" Content="EndpointId : "></Label>
+        <Label Style="{StaticResource RightColumnStyle}" Grid.Row="2" Content="{Binding UsbListener.EndPointId, ElementName=window}" />
+        <Label Style="{StaticResource LeftColumnStyle}" Grid.Row="3" Content="Last key pressed : "></Label>
+        <Label Style="{StaticResource RightColumnStyle}" Grid.Row="3" Content="{Binding LastKeyCode, ElementName=window}" />
+        <!--<Button Style="{StaticResource LeftColumnStyle}" Grid.Row="4" Content="Refresh" Click="RefreshClick" Height="25" Width="70"></Button>-->
+    </Grid>
+</Window>

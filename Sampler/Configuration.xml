@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Configurations>
+  <Configuration name="global">
+    <Sound keyCode="25" path="Sounds/voila.wav" />
+  </Configuration>
+</Configurations>
