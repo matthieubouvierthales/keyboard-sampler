@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:tb="http://www.hardcodet.net/taskbar"
         x:Name="window"
-        Title="Sampler v0.3" Height="200" Width="270"
+        Title="Sampler v0.4" Height="250" Width="400"
         ShowInTaskbar="False"
         Icon="pack://application:,,,/Sampler;component/Resources/icone.png">
     <Window.Resources>
@@ -36,8 +36,17 @@
                         LeftClickCommand="{Binding TaskbarClickCommand, ElementName=window}"
                         />
 
-        <Label Style="{StaticResource LeftColumnStyle}" Grid.Row="0" Content="USB open : "></Label>
-        <Rectangle Grid.Row="0" Width="10" Height="10" Stroke="Black" StrokeThickness="1">
+        <Label Style="{StaticResource LeftColumnStyle}" Grid.Row="0" Content="Output :"></Label>
+        <ComboBox Style="{StaticResource RightColumnStyle}" ItemsSource="{Binding Devices, ElementName=window}" SelectedItem="{Binding CurrentDevice, ElementName=window}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Description}"></TextBlock>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+            
+        <Label Style="{StaticResource LeftColumnStyle}" Grid.Row="1" Content="USB open : "></Label>
+        <Rectangle Grid.Row="1" Width="10" Height="10" Stroke="Black" StrokeThickness="1">
             <Rectangle.Style>
                 <Style TargetType="Rectangle" BasedOn="{StaticResource RightColumnStyle}">
                     <Setter Property="Margin" Value="5 0 0 0"></Setter>
@@ -52,8 +61,9 @@
                 </Style>
             </Rectangle.Style>
         </Rectangle>
-        <Label Style="{StaticResource LeftColumnStyle}" Grid.Row="1" Content="USB data received : "></Label>
-        <Rectangle Grid.Row="1" Width="10" Height="10" Stroke="Black" StrokeThickness="1">
+        
+        <Label Style="{StaticResource LeftColumnStyle}" Grid.Row="2" Content="USB data received : "></Label>
+        <Rectangle Grid.Row="2" Width="10" Height="10" Stroke="Black" StrokeThickness="1">
             <Rectangle.Style>
                 <Style TargetType="Rectangle" BasedOn="{StaticResource RightColumnStyle}">
                     <Setter Property="Margin" Value="5 0 0 0"></Setter>
@@ -68,10 +78,10 @@
                 </Style>
             </Rectangle.Style>
         </Rectangle>
-        <Label Style="{StaticResource LeftColumnStyle}" Grid.Row="2" Content="EndpointId : "></Label>
-        <Label Style="{StaticResource RightColumnStyle}" Grid.Row="2" Content="{Binding UsbListener.EndPointId, ElementName=window}" />
-        <Label Style="{StaticResource LeftColumnStyle}" Grid.Row="3" Content="Last key pressed : "></Label>
-        <Label Style="{StaticResource RightColumnStyle}" Grid.Row="3" Content="{Binding LastKeyCode, ElementName=window}" />
-        <!--<Button Style="{StaticResource LeftColumnStyle}" Grid.Row="4" Content="Refresh" Click="RefreshClick" Height="25" Width="70"></Button>-->
+        <Label Style="{StaticResource LeftColumnStyle}" Grid.Row="3" Content="EndpointId : "></Label>
+        <Label Style="{StaticResource RightColumnStyle}" Grid.Row="3" Content="{Binding UsbListener.EndPointId, ElementName=window}" />
+        <Label Style="{StaticResource LeftColumnStyle}" Grid.Row="4" Content="Last key pressed : "></Label>
+        <Label Style="{StaticResource RightColumnStyle}" Grid.Row="4" Content="{Binding LastKeyCode, ElementName=window}" />
+        <!--<Button Style="{StaticResource LeftColumnStyle}" Grid.Row="5" Content="Refresh" Click="RefreshClick" Height="25" Width="70"></Button>-->
     </Grid>
 </Window>

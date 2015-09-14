@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -21,6 +22,7 @@ using System.Xml.Linq;
 using LibUsbDotNet;
 using LibUsbDotNet.LibUsb;
 using LibUsbDotNet.Main;
+using NAudio.Wave;
 
 namespace Sampler
 {
@@ -38,6 +40,8 @@ namespace Sampler
         private int _lastKeyCode = -1;
 
         private ICommand _taskBarClickCommand;
+        private ObservableCollection<DirectSoundDeviceInfo> _devices;
+        private DirectSoundDeviceInfo _device;
 
         public ICommand TaskbarClickCommand
         {
@@ -71,6 +75,38 @@ namespace Sampler
             }
         }
 
+        public ObservableCollection<DirectSoundDeviceInfo> Devices
+        {
+            get
+            {
+                return _devices;
+            }
+            private set
+            {
+                if (_devices != value)
+                {
+                    _devices = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public DirectSoundDeviceInfo CurrentDevice
+        {
+            get
+            {
+                return _device;
+            }
+            private set
+            {
+                if (_device != value)
+                {
+                    _device = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public MainWindow()
         {
             _listener = new UsbListener();
@@ -78,7 +114,7 @@ namespace Sampler
             
 
             Loaded += MainWindow_Loaded;
-            Application.Current.Exit += OnApplicationExit; ;
+            Application.Current.Exit += OnApplicationExit;
         }
 
         void OnApplicationExit(object sender, ExitEventArgs e)
@@ -104,15 +140,23 @@ namespace Sampler
             
         }
 
-        private void PlaySound(int keyCode)
-        {
-        }
-
-
         void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
+            Devices = new ObservableCollection<DirectSoundDeviceInfo>(DirectSoundOut.Devices);
+            this.PropertyChanged += MainWindow_PropertyChanged;
             LoadConfiguration();
             ResetListener();
+        }
+
+        void MainWindow_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "CurrentDevice")
+            {
+                foreach (var player in _config.GetPlayers())
+                {
+                    player.SetDevice(CurrentDevice.Guid);
+                }
+            }
         }
 
         private void ResetListener()

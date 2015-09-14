@@ -21,6 +21,11 @@ namespace Sampler
             _mappings = new Dictionary<int, Player>();
             Name = name;
         }
+
+        public List<Player> GetPlayers()
+        {
+            return _mappings.Values.ToList();
+        }
          
         public static Configuration Parse(XElement element)
         {
