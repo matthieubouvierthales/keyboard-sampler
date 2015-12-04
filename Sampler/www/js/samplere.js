@@ -3,7 +3,7 @@
  */
 'use strict';
 
-var IP_ADDRESS_SAMPLER = '192.168.0.1';
+responsiveVoice.setDefaultVoice("French Female");
 
 function callSound(soundId) {
   $.post('/api/sound/'+soundId, function(data) {
