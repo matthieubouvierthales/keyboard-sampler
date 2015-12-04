@@ -22,6 +22,7 @@ using System.Xml.Linq;
 using LibUsbDotNet;
 using LibUsbDotNet.LibUsb;
 using LibUsbDotNet.Main;
+using Microsoft.Owin.Hosting;
 using NAudio.Wave;
 
 namespace Sampler
@@ -43,6 +44,8 @@ namespace Sampler
         private ObservableCollection<DirectSoundDeviceInfo> _devices;
         private DirectSoundDeviceInfo _device;
 
+        private IDisposable _webServer;
+
         public ICommand TaskbarClickCommand
         {
             get
@@ -50,6 +53,8 @@ namespace Sampler
                 return (_taskBarClickCommand ?? (_taskBarClickCommand = new TaskbarClickCommand()));
             }
         }
+
+        
 
         public UsbListener UsbListener
         {
@@ -111,15 +116,40 @@ namespace Sampler
         {
             _listener = new UsbListener();
             InitializeComponent();
-            
+
+            string baseAddress = "http://+:9000/";
+
+            // Start OWIN host 
+            _webServer = WebApp.Start<Startup>(url: baseAddress);
+            SoundController.SoundRequested += SoundControllerSoundRequested;
 
             Loaded += MainWindow_Loaded;
             Application.Current.Exit += OnApplicationExit;
         }
 
+        void SoundControllerSoundRequested(object sender, int e)
+        {
+            Player sound = _config.GetSound(e);
+            if (sound != null)
+            {
+                if (!sound.IsLooping)
+                {
+                    Dispatcher.Invoke(() => sound.Play(false));
+                }
+                else
+                {
+                    Dispatcher.Invoke(() => sound.Stop());
+                }
+            }
+        }
+
         void OnApplicationExit(object sender, ExitEventArgs e)
         {
             StopListener();
+            if (_webServer != null)
+            {
+                _webServer.Dispose();
+            }
         }
 
         void OnUsbKeyDown(object sender, KeyDownEventArgs e)
