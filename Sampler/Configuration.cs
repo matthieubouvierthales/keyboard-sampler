@@ -51,7 +51,7 @@ namespace Sampler
                 }
                 Player p = new Player(soundUri);
                 config._mappings.Add(keyCode, p);
-                config._soundsInfo.Add(new SoundInfo(keyCode, name, soundUri.AbsolutePath));
+                config._soundsInfo.Add(new SoundInfo(keyCode, name, soundUri.OriginalString));
             }
 
             return config;
